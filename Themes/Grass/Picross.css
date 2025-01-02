@@ -1,0 +1,93 @@
+﻿#tableBoard {
+	margin: 0px auto 0px auto;
+	font-family: 'Arial Black';
+	font-size: 14px;
+	background-color: #E7F3F7;
+	text-align: center;
+}
+#captionTitle {
+	font-size: 12px;
+	text-align: center;
+	margin: 0px auto 0px auto;
+}
+#spanGameOver {
+	font-family: "Courier New";
+	font-weight: bold;
+}
+#spanGameTime {
+	font-family: Vedana;
+}
+#spanGameError {
+	font-family: Vendana;
+}
+#tdColHeader {
+	padding-right: 1px;
+	padding-left: 1px;
+	vertical-align: bottom;
+}
+#tableColHeader {
+	background-position: 1px bottom;
+	background-color: #734D4A;
+	background-image: url('bgColHeader.gif');
+	text-align: center;
+}
+#tableColHeader td {
+	width: 20px;
+	padding-bottom: 5px;
+	vertical-align: bottom;
+}
+#tableColHeader td.revealed {
+	color: #999999;
+}
+#tdRowHeader {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	text-align: right;
+}
+#tableRowHeader {
+	background-position: right 1px;
+	background-color: #734D4A;
+	width: 100%;
+	background-image: url('bgRowHeader.gif');
+	text-align: right;
+	vertical-align: middle;
+}
+#tableRowHeader  td {
+	height: 20px;
+	padding-right: 5px;
+}
+#tableRowHeader td.revealed {
+	color: #999999;
+}
+#tdSquare {
+	border: 1px solid #000000;
+}
+#tableSquare {
+	background-color: #734D4A;
+	background-image: url('bgSquare.gif');
+	background-position: 1px 1px;
+}
+#tableSquare td {
+	background-position: 0px 0px;
+	height: 20px;
+	width: 20px;
+	cursor: pointer;
+}
+#tableSquare td.highlight {
+	background-color: #FFFF99;
+}
+#tableSquare  td.revealed  {
+	background-image: url('block.gif');
+}
+#tableSquare  td.error  {
+	background-image: url('error.gif');
+}
+#tableSquare  td.marked  {
+	background-image: url('cross.gif');
+}
+#tableSquare  td.block  {
+	background-color: #000000;
+}
+#tableSquare  td.plain  {
+	background-color: #FFFFFF;
+}
