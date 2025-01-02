@@ -1,0 +1,293 @@
+﻿<html>
+	<head>
+		<title></title>
+		<link id="linkTheme" href="Themes/Default/Picross.css" type="text/css" rel="stylesheet" />
+		<style id="style" type="text/css">
+			body,
+			input {
+				font-family: Verdana;
+				font-size: 12px;
+			}
+			input {
+				font-family: Verdana;
+				font-size: 11px;
+				font-weight: bold;
+			}
+			input.textbox {
+				background-color: #ffff99;
+				border-style: inset;
+				border-width: 1px;
+				border-color: #000000 #c0c0c0 #c0c0c0 #000000;
+			}
+			#divhistory {
+				width: 500px;
+				margin: 0px auto;
+			}
+			#divhistory dt {
+				font-family: 'Arial';
+				font-size: 12px;
+				font-weight: bold;
+			}
+			#divhistory dd {
+				font-family: Verdana;
+				font-size: 11px;
+			}
+			#divScoreBoard {
+				font-family: Verdana;
+				font-size: 11px;
+				border-style: outset;
+				border-width: 1px;
+				position: absolute;
+				z-index: 100;
+				background-color: #ffffff;
+			}
+			#divScoreBoard div {
+				text-align: right;
+			}
+			#divScoreBoard p {
+				font-family: 'Arial Black';
+				font-size: 15px;
+				text-align: center;
+			}
+			#divScoreBoard dl {
+				width: 100%;
+			}
+			#divScoreBoard dt {
+				width: 45%;
+				font-weight: bold;
+				text-align: right;
+				float: left;
+				clear: left;
+				line-height: 20px;
+				padding-right: 10px;
+			}
+			#divScoreBoard dd {
+				text-align: left;
+				line-height: 20px;
+			}
+			#aClose {
+				border: 1px solid #ffffff;
+				border-width: 1px;
+				width: 16px;
+				height: 16px;
+				display: block;
+				margin-right: 0px;
+				margin-left: auto;
+				text-align: center;
+				text-decoration: none;
+			}
+			#aClose:hover {
+				border-width: 1px;
+				background-color: #ffff99;
+				border-style: outset;
+			}
+			#tableColHeader td, #tableRowHeader td {
+				font-size: 14px;
+			}
+		</style>
+
+		<script src="picross.js"></script>
+
+		<script src="patterns.js" type="module"></script>
+
+		<script>
+			function switchTheme() {
+				var select = document.getElementById('selectThemes');
+				var theme = select.options[select.selectedIndex].value;
+				var link = document.getElementById('linkTheme');
+				link.href = 'Themes/' + theme + '/Picross.css';
+			}
+
+			function beginPatternGame() {
+				var select = document.getElementById('selectPatterns');
+				var patternName = select.options[select.selectedIndex].value;
+				var rawData = getPattern(patternName).data;
+				board.type = 'Pattern - ' + patternName;
+				loadBoard(rawData);
+			}
+
+			function beginRandomGame() {
+				var rows = parseInt(
+					document.getElementById('selectRows').options[document.getElementById('selectRows').selectedIndex].value
+				);
+				var cols = parseInt(
+					document.getElementById('selectCols').options[document.getElementById('selectCols').selectedIndex].value
+				);
+				var rawData = '';
+
+				for (var i = 0; i < rows; i++) {
+					for (var j = 0; j < cols; j++) {
+						rawData += Math.random() < 0.5 ? '0' : '1';
+					}
+
+					if (i < rows - 1) {
+						rawData += '2';
+					}
+				}
+
+				board.type = 'Random';
+				loadBoard(rawData);
+			}
+
+			function submitScore() {
+				window.alert('Sorry, not implemented yet.');
+			}
+
+			window.onload = function () {
+				document.title = board.name + board.version;
+				loadPatterns(document.getElementById('selectPatterns'));
+			};
+		</script>
+	</head>
+	<body oncontextmenu="return false;">
+		<div id="divBoard" style="display: none">
+			<table border="0" cellpadding="0" cellspacing="0" id="tableBoard">
+				<caption id="captionTitle">
+					Eric's Picross Game
+				</caption>
+				<tbody>
+					<tr>
+						<td id="tdTimer" style="width: 100px; font-size: 16px">&nbsp;</td>
+						<td id="tdColHeader">
+							<table border="0" cellpadding="0" cellspacing="1" id="tableColHeader">
+								<tbody></tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td id="tdRowHeader">
+							<table border="0" cellpadding="0" cellspacing="1" id="tableRowHeader">
+								<tbody></tbody>
+							</table>
+						</td>
+						<td id="tdSquare">
+							<table border="0" cellpadding="0" cellspacing="1" id="tableSquare">
+								<tbody></tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="divScoreBoard" style="display: none; width: 400px; height: 200px">
+			<div>
+				<a id="aClose" href="javascript:scoreBoard.hide();" onmouseover="" onmouseout="">X</a>
+			</div>
+			<p>Game Finished</p>
+			<dl>
+				<dt>Game Time:</dt>
+				<dd id="ddGameTime">33</dd>
+				<dt>Game Type:</dt>
+				<dd id="ddGameType">33</dd>
+				<dt>Error Moves:</dt>
+				<dd id="ddGameError">33</dd>
+				<dt>Enter Your Name:</dt>
+				<dd><input type="text" class="textbox" id="inputPlayerName" /></dd>
+				<dt>&nbsp;</dt>
+				<dd><input type="button" value="Submit" onclick="submitScore();" /></dd>
+			</dl>
+		</div>
+		<br />
+		<div id="divBoardSize" style="text-align: center"></div>
+		<br />
+		<br />
+		<div style="width: 500px; margin: 0px auto">
+			<span style="font-weight: bold">UI Theme</span><span style="font-weight: bold">:</span>&nbsp;
+			<select id="selectThemes" style="width: 150px">
+				<option selected="selected" value="Default">Default</option>
+				<option value="Apple">Apple</option>
+				<option value="Bun">Bun</option>
+				<option value="Grass">Grass</option>
+				<option value="Ice">Ice</option>
+				<option value="Piano">Piano</option>
+				<option value="Snow">Snow</option>
+				<option value="Yarn">Yarn</option>
+			</select>
+			&nbsp;&nbsp;&nbsp;
+			<input onclick="switchTheme();" type="button" value="Switch" />
+			<br />
+			<br />
+			<span style="font-weight: bold">Pattern Game:</span>&nbsp;
+			<select id="selectPatterns" style="width: 150px"></select>
+			&nbsp;&nbsp;&nbsp;
+			<input onclick="beginPatternGame();" type="button" value="Start Game" />
+			<br />
+			<br />
+			<span style="font-weight: bold">Random Game:</span> Rows:
+			<select id="selectRows" style="width: 60px">
+				<option selected="selected" value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+			</select>
+			&nbsp;&nbsp; Cols:
+			<select id="selectCols" style="width: 60px">
+				<option selected="selected" value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+			</select>
+			&nbsp;&nbsp;&nbsp;
+			<input type="button" onclick="beginRandomGame();" value="Start Game" />
+		</div>
+		<br />
+		<div id="divhistory">
+			<dl>
+				<dt>Picross v0.1 Updates:</dt>
+				<dd>1. Basic functions of Picross are implemented.</dd>
+				<dd>2. Complexity of Picross can be customized, the minimum and maximun row/col number is 5 and 25.</dd>
+			</dl>
+			<dl>
+				<dt>Picross v0.11 Updates:</dt>
+				<dd>1. The initialization bug has been fixed.</dd>
+			</dl>
+			<dl>
+				<dt>Picross v0.12 Updates:</dt>
+				<dd>1. Picross UI has been refreshed.</dd>
+				<dd>2. Timer bug and new game bug has been fixed.</dd>
+			</dl>
+			<dl>
+				<dt>Picross v0.20 Updates:</dt>
+				<dd>1. Picross UI has been enchanted.</dd>
+				<dd>2. &quot;Pattern Game&quot; has been added to Picross initial type.</dd>
+				<dd>3. Error icon has been changed, not same as marked icon anymore.</dd>
+				<dd>4. &quot;Hint&quot; mode has been added.</dd>
+			</dl>
+			<dl>
+				<dt>Picross v0.25 Updates:</dt>
+				<dd>1. Picross UI Theme can be switched between multiple themes (Default and Apple for now).</dd>
+				<dd>2. Stucture code has been redesigned, the game cost less system resource now.</dd>
+				<dd>3. Picross will get much better performance in Firefox than in IE7.</dd>
+			</dl>
+			<dl>
+				<dt>Picross v0.27 Updates:</dt>
+				<dd>1. More UI themes have been added.</dd>
+				<dd>2. Scoreboard has been added, but score submiting has not been implemented.</dd>
+			</dl>
+		</div>
+	</body>
+</html>
